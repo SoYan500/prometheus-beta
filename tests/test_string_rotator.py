@@ -33,3 +33,9 @@ def test_single_character():
 
 def test_long_string_rotation():
     assert rotate_and_reverse("abcdefg", 100) == "gfedcba"
+
+# Add print diagnostics to help understand the function behavior
+def test_diagnostic_print():
+    result = rotate_and_reverse("hello", 2)
+    print(f"\nDiagnostic: 'hello' rotated 2 times and reversed = '{result}'")
+    print(f"Expected: 'lole'")
