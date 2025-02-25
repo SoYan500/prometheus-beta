@@ -4,7 +4,10 @@ from src.string_rotator import rotate_and_reverse
 def test_basic_rotation_and_reverse():
     result = rotate_and_reverse("hello", 2)
     print(f"\nDiagnostic 'hello' rotated 2 times and reversed:")
-    print(f"Rotated: {result}")
+    print(f"Original: 'hello'")
+    print(f"Rotated (manual step 1): 'llo' + 'he' = 'llohe'")
+    print(f"Reversed (manual step 2): 'lole'")
+    print(f"Result: {result}")
     print(f"Expected: lole")
     assert result == "lole"
 
@@ -14,7 +17,10 @@ def test_rotation_full_length():
 def test_rotation_multiple_length():
     result = rotate_and_reverse("python", 8)
     print(f"\nDiagnostic 'python' rotated 8 times and reversed:")
-    print(f"Rotated: {result}")
+    print(f"Original: 'python'")
+    print(f"Rotated (manual step 1): 'on' + 'pyth' = 'onpyth'")
+    print(f"Reversed (manual step 2): 'nohtpy'")
+    print(f"Result: {result}")
     print(f"Expected: nohtpy")
     assert result == "nohtpy"
 
@@ -42,6 +48,9 @@ def test_single_character():
 def test_long_string_rotation():
     result = rotate_and_reverse("abcdefg", 100)
     print(f"\nDiagnostic 'abcdefg' rotated 100 times and reversed:")
-    print(f"Rotated: {result}")
+    print(f"Original: 'abcdefg'")
+    print(f"Rotated (manual step 1): 'fg' + 'abcde' = 'fgabcde'")
+    print(f"Reversed (manual step 2): 'gfedcba'")
+    print(f"Result: {result}")
     print(f"Expected: gfedcba")
     assert result == "gfedcba"
