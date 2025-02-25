@@ -31,8 +31,6 @@ def rotate_and_reverse(string, rotations):
     # Normalize rotations to be within string length
     effective_rotations = rotations % len(string)
     
-    # Perform rotation
-    rotated = string[effective_rotations:] + string[:effective_rotations]
-    
-    # Reverse the rotated string
+    # Perform rotation and then reverse
+    rotated = string[len(string)-effective_rotations:] + string[:len(string)-effective_rotations]
     return rotated[::-1]
