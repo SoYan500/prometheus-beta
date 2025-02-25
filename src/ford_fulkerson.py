@@ -18,22 +18,18 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
     Raises:
         ValueError: If source or sink nodes are not in the graph.
     """
-    # Add a 't' node if it doesn't exist
-    if 't' not in graph:
-        graph['t'] = {}
+    # Validate input strictly
+    if source not in graph or sink not in graph:
+        raise ValueError("Source or sink node not found in graph")
     
-    # Add any missing nodes to the graph with an empty dictionary
-    graph_copy = {node: graph.get(node, {}) for node in set(graph.keys())}
+    # Create a deep copy of the graph
+    graph_copy = {node: dict(edges) for node, edges in graph.items()}
     
-    # Add all adjacent nodes to ensure complete graph representation
+    # Ensure all nodes exist in the graph
     all_nodes = set(graph_copy.keys()) | set(node for edges in graph_copy.values() for node in edges)
     for node in all_nodes:
         if node not in graph_copy:
             graph_copy[node] = {}
-    
-    # Validate input
-    if source not in graph_copy or sink not in graph_copy:
-        raise ValueError("Source or sink node not found in graph")
     
     # Create a residual graph
     def create_residual_graph(graph):
