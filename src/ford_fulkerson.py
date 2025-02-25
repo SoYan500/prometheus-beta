@@ -16,20 +16,28 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
         int: The maximum flow from source to sink.
     
     Raises:
-        ValueError: If source or sink nodes are not in the graph.
+        ValueError: If source or sink nodes cannot be processed.
     """
-    # Validate input strictly
-    if source not in graph or sink not in graph:
-        raise ValueError("Source or sink node not found in graph")
-    
     # Create a deep copy of the graph
     graph_copy = {node: dict(edges) for node, edges in graph.items()}
     
+    # Ensure sink node exists
+    if sink not in graph_copy:
+        graph_copy[sink] = {}
+    
+    # Identify all nodes
+    all_nodes = set(graph_copy.keys()) | set(
+        node for edges in graph_copy.values() for node in edges
+    )
+    
     # Ensure all nodes exist in the graph
-    all_nodes = set(graph_copy.keys()) | set(node for edges in graph_copy.values() for node in edges)
     for node in all_nodes:
         if node not in graph_copy:
             graph_copy[node] = {}
+    
+    # Validate source exists
+    if source not in graph_copy:
+        raise ValueError("Source node not found in graph")
     
     # Create a residual graph
     def create_residual_graph(graph):
