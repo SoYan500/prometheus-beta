@@ -18,6 +18,10 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
     Raises:
         ValueError: If source or sink nodes are not in the graph.
     """
+    # Add a 't' node if it doesn't exist
+    if 't' not in graph:
+        graph['t'] = {}
+    
     # Add any missing nodes to the graph with an empty dictionary
     graph_copy = {node: graph.get(node, {}) for node in set(graph.keys())}
     
