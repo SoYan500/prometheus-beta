@@ -18,17 +18,6 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
     Raises:
         ValueError: If source or sink nodes are not in the graph.
     """
-    # Add a 't' node if it doesn't exist
-    if 't' not in graph:
-        graph['t'] = {}
-    
-    # Add any missing nodes to the graph with an empty dictionary
-    all_nodes = set(list(graph.keys()) + 
-                    [node for nodes in graph.values() for node in nodes])
-    for node in all_nodes:
-        if node not in graph:
-            graph[node] = {}
-    
     # Validate input
     if source not in graph or sink not in graph:
         raise ValueError("Source or sink node not found in graph")
@@ -40,12 +29,12 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
             residual[node] = {}
             for neighbor, capacity in graph[node].items():
                 # Forward edge
-                residual[node][neighbor] = capacity
+                residual[node].setdefault(neighbor, 0)
+                residual[node][neighbor] += capacity
                 # Backward edge (for flow adjustment)
                 if neighbor not in residual:
                     residual[neighbor] = {}
-                if node not in residual[neighbor]:
-                    residual[neighbor][node] = 0
+                residual[neighbor].setdefault(node, 0)
         return residual
     
     # Breadth-first search to find augmenting path
@@ -101,11 +90,7 @@ def ford_fulkerson(graph: Dict[str, Dict[str, int]], source: str, sink: str) -> 
         while current != source:
             prev = parent[current]
             residual[prev][current] -= path_flow
-            # Ensure the backward edge exists before updating
-            if current not in residual or prev not in residual[current]:
-                if current not in residual:
-                    residual[current] = {}
-                residual[current][prev] = 0
+            residual[current].setdefault(prev, 0)
             residual[current][prev] += path_flow
             current = prev
         
