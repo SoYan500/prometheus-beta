@@ -3,7 +3,12 @@ from src.palindrome_substrings import find_shortest_palindrome_substrings
 
 def test_basic_palindromes():
     """Test basic palindromic substring extraction"""
-    assert set(find_shortest_palindrome_substrings("abba")) == {'a', 'b', 'bb', 'abba'}
+    result = find_shortest_palindrome_substrings("abba")
+    assert 'a' in result
+    assert 'b' in result
+    assert 'bb' in result
+    assert 'abba' in result
+    assert len(result) == 4
 
 def test_no_palindromes_longer_than_one():
     """Test when only single-character palindromes exist"""
@@ -19,12 +24,22 @@ def test_single_character():
 
 def test_all_same_characters():
     """Test string with all same characters"""
-    assert set(find_shortest_palindrome_substrings("aaaa")) == {'a', 'aa', 'aaa', 'aaaa'}
+    result = find_shortest_palindrome_substrings("aaaa")
+    assert 'a' in result
+    assert 'aa' in result
+    assert 'aaa' in result
+    assert 'aaaa' in result
+    assert len(result) == 4
 
 def test_mixed_palindromes():
     """Test string with multiple length palindromes"""
     result = find_shortest_palindrome_substrings("racecar")
-    assert set(result) == {'r', 'a', 'c', 'e', 'racecar'}
+    assert 'r' in result
+    assert 'a' in result
+    assert 'c' in result
+    assert 'e' in result
+    assert 'racecar' in result
+    assert len(result) == 5
 
 def test_complex_palindromes():
     """Test a more complex scenario"""
