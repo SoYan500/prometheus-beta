@@ -4,13 +4,13 @@ def find_shortest_palindrome_substrings(s):
     
     A palindromic substring is a sequence of characters that reads the same 
     forwards and backwards. This function returns a list of the shortest 
-    such substrings found in the input string.
+    such substrings found in the string.
     
     Args:
         s (str): The input string to search for palindromic substrings.
     
     Returns:
-        list: A list of the shortest palindromic substrings found in the string.
+        list: A sorted list of the shortest palindromic substrings found in the string.
     
     Examples:
         >>> find_shortest_palindrome_substrings("abba")
@@ -22,11 +22,8 @@ def find_shortest_palindrome_substrings(s):
     if not s:
         return []
     
-    # Set to store unique palindromes
-    palindromes = set()
-    
-    # Keep track of the minimum length of palindromes
-    min_length = float('inf')
+    # Dict to store palindromes grouped by length
+    palindrome_groups = {}
     
     # Check all possible substrings
     for i in range(len(s)):
@@ -36,12 +33,17 @@ def find_shortest_palindrome_substrings(s):
             
             # Check if substring is a palindrome
             if substring == substring[::-1]:
-                # Update minimum length
-                if len(substring) < min_length:
-                    min_length = len(substring)
-                    palindromes = {substring}
-                elif len(substring) == min_length:
-                    palindromes.add(substring)
+                # Group palindromes by length
+                if len(substring) not in palindrome_groups:
+                    palindrome_groups[len(substring)] = set()
+                palindrome_groups[len(substring)].add(substring)
+    
+    # If no palindromes found, return empty list
+    if not palindrome_groups:
+        return []
+    
+    # Find the minimum length
+    min_length = min(palindrome_groups.keys())
     
     # Return sorted list of shortest palindromes
-    return sorted(list(palindromes))
+    return sorted(list(palindrome_groups[min_length]))
