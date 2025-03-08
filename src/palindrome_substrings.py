@@ -25,6 +25,9 @@ def find_shortest_palindrome_substrings(s):
     # Set to store unique palindromes
     palindromes = set()
     
+    # Keep track of the minimum length of palindromes
+    min_length = float('inf')
+    
     # Check all possible substrings
     for i in range(len(s)):
         for j in range(i, len(s)):
@@ -33,14 +36,12 @@ def find_shortest_palindrome_substrings(s):
             
             # Check if substring is a palindrome
             if substring == substring[::-1]:
-                palindromes.add(substring)
+                # Update minimum length
+                if len(substring) < min_length:
+                    min_length = len(substring)
+                    palindromes = {substring}
+                elif len(substring) == min_length:
+                    palindromes.add(substring)
     
-    # Find the length of the shortest palindromes
-    if not palindromes:
-        return list(palindromes)
-    
-    # Get minimum length
-    min_length = min(len(p) for p in palindromes)
-    
-    # Return all palindromes of the minimum length
-    return sorted(list(p for p in palindromes if len(p) == min_length))
+    # Return sorted list of shortest palindromes
+    return sorted(list(palindromes))
