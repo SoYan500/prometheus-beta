@@ -4,13 +4,15 @@ def find_shortest_palindrome_substrings(s):
     
     A palindromic substring is a sequence of characters that reads the same 
     forwards and backwards. This function returns a list of the shortest 
-    such substrings found in the string.
+    such substrings found in the string, which may include single characters 
+    and multi-character palindromes.
     
     Args:
         s (str): The input string to search for palindromic substrings.
     
     Returns:
-        list: A sorted list of the shortest palindromic substrings found in the string.
+        list: A sorted list of the shortest and full-length palindromic substrings 
+              found in the string.
     
     Examples:
         >>> find_shortest_palindrome_substrings("abba")
@@ -44,6 +46,11 @@ def find_shortest_palindrome_substrings(s):
     
     # Find the minimum length
     min_length = min(palindrome_groups.keys())
+    max_length = max(palindrome_groups.keys())
     
-    # Return sorted list of shortest palindromes
-    return sorted(list(palindrome_groups[min_length]))
+    # Combine shortest palindromes with full-length palindromes
+    shortest_set = palindrome_groups[min_length]
+    full_length_set = palindrome_groups.get(max_length, set())
+    
+    # Combine and sort
+    return sorted(list(shortest_set.union(full_length_set)))
