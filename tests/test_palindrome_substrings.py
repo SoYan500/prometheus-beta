@@ -4,11 +4,16 @@ from src.palindrome_substrings import find_shortest_palindrome_substrings
 def test_basic_palindromes():
     """Test basic palindromic substring extraction"""
     result = find_shortest_palindrome_substrings("abba")
-    assert set(result) == {'a', 'b', 'bb', 'abba'}
+    assert len(result) == 4
+    assert 'a' in result
+    assert 'b' in result
+    assert 'bb' in result
+    assert 'abba' in result
 
 def test_no_palindromes_longer_than_one():
     """Test when only single-character palindromes exist"""
-    assert set(find_shortest_palindrome_substrings("abc")) == {'a', 'b', 'c'}
+    result = find_shortest_palindrome_substrings("abc")
+    assert set(result) == {'a', 'b', 'c'}
 
 def test_empty_string():
     """Test handling of empty string"""
@@ -21,7 +26,11 @@ def test_single_character():
 def test_all_same_characters():
     """Test string with all same characters"""
     result = find_shortest_palindrome_substrings("aaaa")
-    assert set(result) == {'a', 'aa', 'aaa', 'aaaa'}
+    assert len(result) == 4
+    assert 'a' in result
+    assert 'aa' in result
+    assert 'aaa' in result
+    assert 'aaaa' in result
 
 def test_mixed_palindromes():
     """Test string with multiple length palindromes"""
