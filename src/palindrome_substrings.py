@@ -42,20 +42,17 @@ def find_shortest_palindrome_substrings(s):
     if not palindrome_groups:
         return []
     
-    # Find the shortest length, also include full-length if a unique palindrome exists
+    # Find the shortest length
     min_length = min(palindrome_groups.keys())
     max_length = max(palindrome_groups.keys())
     
-    # Collect all palindromes with the shortest length 
-    result_set = palindrome_groups[min_length]
+    # Collect palindromes
+    result_set = set()
     
-    # If full-length string is a single unique palindrome, add it
-    if max_length > min_length and len(palindrome_groups[max_length]) == 1:
-        result_set.update(palindrome_groups[max_length])
-    
-    # Also include next shortest length palindromes
-    if min_length + 1 in palindrome_groups:
-        result_set.update(palindrome_groups[min_length + 1])
+    # Add all palindromes up to max length 
+    for length in range(min_length, max_length + 1):
+        if length in palindrome_groups:
+            result_set.update(palindrome_groups[length])
     
     # Return sorted list
     return sorted(list(result_set))
