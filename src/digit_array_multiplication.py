@@ -20,9 +20,9 @@ def multiply_digit_arrays(A, B):
     if not all(isinstance(digit, int) and 0 <= digit <= 9 for digit in A + B):
         raise ValueError("All array elements must be single digits (0-9)")
     
-    # Convert arrays to integers
-    num_a = int(''.join(map(str, A)))
-    num_b = int(''.join(map(str, B)))
+    # Convert arrays to integers, stripping leading zeros
+    num_a = int(''.join(map(str, A)).lstrip('0') or '0')
+    num_b = int(''.join(map(str, B)).lstrip('0') or '0')
     
     # Multiply and convert result back to digit array
     result = num_a * num_b
