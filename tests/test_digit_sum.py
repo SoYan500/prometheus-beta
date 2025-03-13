@@ -27,5 +27,5 @@ def test_sum_of_digits_with_special_characters():
 
 def test_sum_of_digits_type_error():
     """Test that the function raises a TypeError for non-string input."""
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         sum_of_digits(12345)
