@@ -11,7 +11,7 @@ def test_zero_multiplication():
     """Test multiplication involving zero"""
     A = [0, 0, 5]  # 5
     B = [1, 2, 0]  # 120
-    assert multiply_digit_arrays(A, B) == [0, 6, 0]
+    assert multiply_digit_arrays(A, B) == [6, 0, 0]
 
 def test_single_digit_arrays():
     """Test multiplication of single-digit arrays"""
