@@ -8,6 +8,7 @@ def validate_password(password):
     - Contains at least one lowercase letter
     - Contains at least one digit
     - Contains at least one special character (!, @, #, $, %, ^, &, *)
+    - No whitespace characters allowed
 
     Args:
         password (str): The password to validate
@@ -21,6 +22,10 @@ def validate_password(password):
     # Check if input is a string
     if not isinstance(password, str):
         raise TypeError("Password must be a string")
+    
+    # Check for whitespace
+    if re.search(r'\s', password):
+        return False
     
     # Check minimum length
     if len(password) < 8:
