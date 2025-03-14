@@ -19,7 +19,7 @@ def filter_unique_multiples(numbers):
     # Filter numbers that are multiples of 3 or 5, but not both
     unique_multiples = [
         num for num in numbers 
-        if (num % 3 == 0) != (num % 5 == 0)
+        if ((num % 3 == 0) ^ (num % 5 == 0))
     ]
     
     # Return sorted list
