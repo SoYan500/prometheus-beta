@@ -19,6 +19,10 @@ def can_form_palindrome(s: str) -> bool:
     # Remove any whitespace and convert to lowercase for consistency
     s = s.replace(" ", "").lower()
 
+    # An empty string is considered a palindrome
+    if not s:
+        return True
+
     # Count the frequency of each character
     char_counts = Counter(s)
 
@@ -26,4 +30,4 @@ def can_form_palindrome(s: str) -> bool:
     odd_count = sum(1 for count in char_counts.values() if count % 2 != 0)
 
     # A palindrome can have at most one character with odd frequency
-    return odd_count <= 1 and len(s) > 0
+    return odd_count <= 1
