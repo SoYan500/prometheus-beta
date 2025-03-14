@@ -26,4 +26,4 @@ def can_form_palindrome(s: str) -> bool:
     odd_count = sum(1 for count in char_counts.values() if count % 2 != 0)
 
     # A palindrome can have at most one character with odd frequency
-    return odd_count <= 1
+    return odd_count <= 1 and len(s) > 0
