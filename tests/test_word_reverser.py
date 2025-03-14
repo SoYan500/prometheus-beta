@@ -14,8 +14,8 @@ def test_reverse_words_and_chars():
     # Test string with extra spaces
     assert reverse_words_and_chars("  Hello   World  ") == "dlroW olleH"
     
-    # Test special characters and numbers
-    assert reverse_words_and_chars("123 abc! def@") == "fed! cba 321"
+    # Test special characters and numbers (preserving character order within words)
+    assert reverse_words_and_chars("123 abc! def@") == "@fed !cba 321"
 
 def test_input_types():
     # Test with non-string input
