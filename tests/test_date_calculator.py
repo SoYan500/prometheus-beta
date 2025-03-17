@@ -43,4 +43,4 @@ def test_long_time_span():
     """Test calculating days for dates far apart."""
     date1 = date(2000, 1, 1)
     date2 = date(2023, 1, 1)
-    assert calculate_days_between_dates(date1, date2) == 8493
+    assert calculate_days_between_dates(date1, date2) == 8401  # Updated to match actual calculation
