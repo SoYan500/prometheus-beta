@@ -9,7 +9,7 @@ def test_normal_months():
 
 def test_leap_year():
     # Verify leap year works correctly
-    assert count_weekends_in_month(2024, 2) == 9  # February 2024 (leap year)
+    assert count_weekends_in_month(2024, 2) == 8  # February 2024 (leap year)
 
 def test_edge_cases():
     # Test first and last month of the year
@@ -26,5 +26,5 @@ def test_invalid_inputs():
 def test_specific_month_patterns():
     # Some specific test cases for known month patterns
     assert count_weekends_in_month(2023, 2) == 8  # February 2023
-    assert count_weekends_in_month(2023, 4) == 8  # April 2023
+    assert count_weekends_in_month(2023, 4) == 10  # April 2023
     assert count_weekends_in_month(2023, 5) == 10  # May 2023
