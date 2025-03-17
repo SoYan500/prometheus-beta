@@ -27,4 +27,4 @@ def test_specific_month_patterns():
     # Some specific test cases for known month patterns
     assert count_weekends_in_month(2023, 2) == 8  # February 2023
     assert count_weekends_in_month(2023, 4) == 10  # April 2023
-    assert count_weekends_in_month(2023, 5) == 10  # May 2023
+    assert count_weekends_in_month(2023, 5) == 8  # May 2023
