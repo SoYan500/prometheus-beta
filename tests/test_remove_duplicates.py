@@ -16,7 +16,7 @@ def test_remove_duplicates_no_duplicates():
 
 def test_remove_duplicates_mixed_case():
     """Test string with mixed case characters."""
-    assert remove_duplicates("HeLLo") == "Helo"
+    assert remove_duplicates("HeLLo") == "HeLo"
 
 def test_remove_duplicates_special_chars():
     """Test string with special characters and duplicates."""
