@@ -13,8 +13,9 @@ def test_valid_consonant_subsequences():
 
 def test_mixed_valid_subsequences():
     """Test strings with mixed valid subsequences."""
-    assert can_divide_subsequences("aabccdeeiou") == True
     assert can_divide_subsequences("bcaaeiou") == True
+    assert can_divide_subsequences("aabbccdeeiou") == True
+    assert can_divide_subsequences("bbaaaiiiooouuu") == True
 
 def test_invalid_subsequences():
     """Test strings that cannot be divided into valid subsequences."""
