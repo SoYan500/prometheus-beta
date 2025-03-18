@@ -38,20 +38,25 @@ def can_divide_subsequences(s: str) -> bool:
         
         return None
     
-    def divide_subsequences(index: int, prev_type: str = None) -> bool:
+    def divide_subsequences(index: int, prev_type: str = None, used_indices: set = None) -> bool:
         """
         Recursive function to divide the string into valid subsequences
         
         Args:
             index: Current starting index
             prev_type: Type of the previous subsequence
+            used_indices: Indices already used in subsequences
         
         Returns:
             bool: Whether a valid division exists
         """
+        # Initialize used indices
+        used_indices = used_indices or set()
+        
         # Base case: Successfully used entire string
         if index == len(s):
-            return True
+            # Ensure all indices were used
+            return len(used_indices) == len(s)
         
         # Prevent going out of bounds
         if index >= len(s):
@@ -72,8 +77,16 @@ def can_divide_subsequences(s: str) -> bool:
             if current_type == prev_type:
                 continue
             
+            # Prevent index reuse
+            if any(idx in used_indices for idx in range(index, index+length)):
+                continue
+            
+            # Create new used indices set
+            new_used_indices = used_indices.copy()
+            new_used_indices.update(range(index, index+length))
+            
             # Recursively try to divide the rest of the string
-            if divide_subsequences(index + length, current_type):
+            if divide_subsequences(index + length, current_type, new_used_indices):
                 return True
         
         return False
