@@ -16,6 +16,7 @@ def can_divide_subsequences(s: str) -> bool:
     2. Subsequences must alternate between vowel and consonant
     3. No index can be used more than once
     4. The entire string must be used
+    5. Each new subsequence must include consecutive characters
     """
     # Validate input
     if not s or not s.islower() or not s.isalpha():
@@ -77,6 +78,10 @@ def can_divide_subsequences(s: str) -> bool:
             
             # Create new set of used indices
             new_used_indices = frozenset(used_indices.union(range(index, index+length)))
+            
+            # Additional constraint: ensure next characters are not reused
+            if any(idx in used_indices for idx in range(index, index+length)):
+                continue
             
             # Recursively try to divide the rest of the string
             if divide_subsequences(
