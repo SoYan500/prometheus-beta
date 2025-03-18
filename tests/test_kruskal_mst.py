@@ -31,9 +31,15 @@ def test_kruskal_mst_basic():
     # Check MST edges
     assert len(mst) == 3
     
-    # Verify edges that should be in the MST
-    expected_edges = {(2, 3, 4), (0, 3, 5), (0, 2, 6)}
-    assert set(mst) == expected_edges
+    # Verify total weight
+    total_weight = sum(edge[2] for edge in mst)
+    assert total_weight == 15
+    
+    # Verify connectivity
+    vertices_in_mst = set()
+    for u, v, _ in mst:
+        vertices_in_mst.update([u, v])
+    assert len(vertices_in_mst) == 4
 
 def test_kruskal_mst_empty_graph():
     """Test MST for an empty graph."""
