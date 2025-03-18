@@ -11,8 +11,11 @@ def can_divide_subsequences(s: str) -> bool:
         bool: True if the string can be divided into valid subsequences, 
               False otherwise.
 
-    Raises:
-        ValueError: If the input string contains non-lowercase English letters.
+    Rules:
+    1. Each subsequence must be at least 2 letters long
+    2. Subsequences must alternate between vowel and consonant
+    3. No index can be used more than once
+    4. The entire string must be used
     """
     # Validate input
     if not s or not s.islower() or not s.isalpha():
@@ -21,54 +24,46 @@ def can_divide_subsequences(s: str) -> bool:
     # Define vowels and consonants
     vowels = set('aeiou')
     
-    # Helper function to check if a subsequence is valid
-    def is_valid_subsequence(subseq: str) -> bool:
-        # Check if subsequence is at least 2 characters long
-        if len(subseq) < 2:
-            return False
-        
-        # Check if all characters are either vowels or consonants
-        return all(char in vowels for char in subseq) or \
-               all(char not in vowels for char in subseq)
+    def is_vowel_subsequence(subseq: str) -> bool:
+        return len(subseq) >= 2 and all(char in vowels for char in subseq)
     
-    # Recursive function to explore all possible divisions
-    def divide_subsequences(index: int, last_subsequence_type: str = None, used_indices: set = None) -> bool:
-        # Initialize used_indices if not provided
-        used_indices = used_indices or set()
-        
-        # Successfully reached the end of the string
+    def is_consonant_subsequence(subseq: str) -> bool:
+        return len(subseq) >= 2 and all(char not in vowels for char in subseq)
+    
+    def divide_subsequences(index: int, used_indices: set, prev_type: str = None) -> bool:
+        # Base case: Successfully used entire string
         if index == len(s):
             return True
         
-        # Prevent using already used indices
+        # If current index already used, fail
         if index in used_indices:
             return False
         
-        # Try subsequences of different lengths
+        # Try subsequence lengths
         for length in range(2, len(s) - index + 1):
-            # Extract potential subsequence
             subsequence = s[index:index+length]
             
-            # Skip invalid subsequences
-            if not is_valid_subsequence(subsequence):
-                continue
-            
-            # Determine subsequence type (vowel or consonant)
+            # Determine subsequence type
             current_type = 'vowel' if subsequence[0] in vowels else 'consonant'
             
-            # Prevent consecutive same-type subsequences
-            if current_type == last_subsequence_type:
+            # Skip if this type is the same as the previous
+            if current_type == prev_type:
                 continue
             
-            # Create a new set of used indices
+            # Check subsequence validity based on type
+            if current_type == 'vowel' and not is_vowel_subsequence(subsequence):
+                continue
+            if current_type == 'consonant' and not is_consonant_subsequence(subsequence):
+                continue
+            
+            # Create new set of used indices
             new_used_indices = used_indices.copy()
-            new_used_indices.update(range(index, index + length))
+            new_used_indices.update(range(index, index+length))
             
             # Recursively try to divide the rest of the string
-            if divide_subsequences(index + length, current_type, new_used_indices):
+            if divide_subsequences(index + length, new_used_indices, current_type):
                 return True
         
-        # No valid division found
         return False
     
-    return divide_subsequences(0)
+    return divide_subsequences(0, set())
