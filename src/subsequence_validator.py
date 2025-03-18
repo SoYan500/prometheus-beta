@@ -79,7 +79,11 @@ def can_divide_subsequences(s: str) -> bool:
             # Create new set of used indices
             new_used_indices = frozenset(used_indices.union(range(index, index+length)))
             
-            # Additional constraint: ensure next characters are not reused
+            # Additional constraint: ensure strict consecutive usage
+            if index > 0 and not set(range(index-1, index+1)).isdisjoint(used_indices):
+                continue
+            
+            # Additional constraint: ensure no index is reused
             if any(idx in used_indices for idx in range(index, index+length)):
                 continue
             
