@@ -9,15 +9,12 @@ def generate_unique_permutations(input_string):
         list: A list of unique permutations of the input string.
 
     Raises:
-        TypeError: If input is not a string.
-        ValueError: If input is None or an empty string.
+        TypeError: If input is not a string or is None.
+        ValueError: If input is an empty string.
     """
     # Validate input
-    if input_string is None:
-        raise ValueError("Input cannot be None")
-    
-    if not isinstance(input_string, str):
-        raise TypeError("Input must be a string")
+    if input_string is None or not isinstance(input_string, str):
+        raise TypeError("Input must be a non-None string")
     
     # Handle empty string case
     if len(input_string) == 0:
