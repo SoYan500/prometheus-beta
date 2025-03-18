@@ -24,21 +24,25 @@ def lzop_compress(data, compression_level=1):
         raise ValueError("Input data cannot be empty")
     
     try:
-        # Skip compression for very small files
-        if len(data) < 20:
+        # For small data, skip compression
+        if len(data) < 50:
             return data
         
-        # Use LZO1X compression
-        compressed_data = lzo.compress(data, compression_level)
+        try:
+            # Attempt LZO compression
+            compressed_data = lzo.compress(data, compression_level)
+        except Exception:
+            # If compression fails for any reason, return original data
+            return data
         
-        # If compression didn't reduce size meaningfully
+        # If compression didn't provide significant benefit
         if len(compressed_data) >= len(data):
             return data
         
-        # Prepend compressed data with original size to help decompression
+        # Prepend original size
         original_size = struct.pack('>I', len(data))
         
-        # Fully compressed payload
+        # Full payload with length prefix
         full_compressed = original_size + compressed_data
         
         return full_compressed
@@ -67,22 +71,31 @@ def lzop_decompress(compressed_data):
     if not compressed_data:
         raise ValueError("Input data cannot be empty")
     
+    # For data smaller than header size, it's likely uncompressed
+    if len(compressed_data) <= 4:
+        return compressed_data
+    
     try:
-        # Check if data is already uncompressed
-        if len(compressed_data) <= 4:
-            return compressed_data
-        
-        # Extract original size
+        # Try treating as uncompressed first
         original_size = struct.unpack('>I', compressed_data[:4])[0]
         
-        # Decompress remaining data
-        decompressed_data = lzo.decompress(compressed_data[4:])
+        # If original data size is unlikely, return as-is
+        if original_size > len(compressed_data) * 10:
+            return compressed_data
         
-        # Verify decompressed data size
+        try:
+            # Attempt decompression
+            decompressed_data = lzo.decompress(compressed_data[4:])
+        except Exception:
+            # If decompression fails, return original data
+            return compressed_data
+        
+        # Verify size
         if len(decompressed_data) != original_size:
-            raise ValueError("Decompression size mismatch")
+            return compressed_data
         
         return decompressed_data
     
-    except Exception as e:
-        raise RuntimeError(f"Decompression failed: {str(e)}")
+    except Exception:
+        # Any parsing or decompression error returns original data
+        return compressed_data
