@@ -18,10 +18,13 @@ def test_mixed_valid_subsequences():
 
 def test_invalid_subsequences():
     """Test strings that cannot be divided into valid subsequences."""
+    # Strings that cannot be divided into valid subsequences
     assert can_divide_subsequences("abc") == False  # Cannot divide
-    assert can_divide_subsequences("aabcc") == False  # Overlapping subsequences
     assert can_divide_subsequences("xyx") == False  # Cannot divide
-    assert can_divide_subsequences("bbaa") == False  # Same type subsequences
+    assert can_divide_subsequences("bbaa") == False  # Repeated type subsequences
+    
+    # Specific case of overlapping subsequences
+    assert can_divide_subsequences("aabcc") == False  # More complex case
 
 def test_edge_cases():
     """Test edge case scenarios."""
