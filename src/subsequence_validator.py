@@ -32,30 +32,31 @@ def can_divide_subsequences(s: str) -> bool:
                all(char not in vowels for char in subseq)
     
     # Try all possible divisions of the string
-    def can_divide(current_index: int, prev_type: str = None) -> bool:
-        # Base case: reached the end of the string
+    def can_divide(current_index: int, used: set) -> bool:
+        # Base case: reached the end of the string successfully
         if current_index == len(s):
             return True
         
-        # Try different subsequence lengths starting from current index
+        # If we've used this index already, we can't use it again
+        if current_index in used:
+            return False
+        
+        # Try different subsequence lengths
         for length in range(2, len(s) - current_index + 1):
             subsequence = s[current_index:current_index + length]
             
-            # Check if this subsequence is valid
+            # Check if subsequence is valid
             if not is_valid_subsequence(subsequence):
                 continue
             
-            # Determine the type of current subsequence
-            current_type = 'vowel' if subsequence[0] in vowels else 'consonant'
+            # Mark these indices as used
+            new_used = used.copy()
+            new_used.update(range(current_index, current_index + length))
             
-            # Ensure we're not repeating the same type of subsequence
-            if prev_type is not None and current_type == prev_type:
-                continue
-            
-            # If we can divide the rest of the string with this subsequence, return True
-            if can_divide(current_index + length, current_type):
+            # Recursively try to divide the rest of the string
+            if can_divide(current_index + length, new_used):
                 return True
         
         return False
     
-    return can_divide(0)
+    return can_divide(0, set())
