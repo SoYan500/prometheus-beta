@@ -23,33 +23,30 @@ def lzop_compress(data):
     if not data:
         raise ValueError("Input data cannot be empty")
     
-    # LZOP uses LZO compression with some additional headers
-    try:
-        # Compress the data using LZO1X algorithm
-        compressed_data = lzo.compress(data, 1)
-        
-        # Create LZOP header
-        # Version (2 bytes), method (1 byte), compression level (1 byte)
-        # Flags (4 bytes), mode (4 bytes), mtime (4 bytes)
-        # Original file size (4 bytes)
-        header = struct.pack('>HHBBIHII', 
-            0x1010,   # Version 
-            0x0020,   # Method (LZO1X)
-            1,        # Compression level
-            0,        # Reserved 
-            0,        # Flags
-            0,        # Mode 
-            0,        # Modification time
-            len(data) # Original file size
-        )
-        
-        # Checksum of original data
-        adler32_checksum = zlib.adler32(data) & 0xffffffff
-        
-        # Combine header, checksum, and compressed data
-        compressed_result = header + struct.pack('>I', adler32_checksum) + compressed_data
-        
-        return compressed_result
+    # Compress the data using LZO1X algorithm with maximum compression
+    compressed_data = lzo.compress(data, 9)
     
-    except Exception as e:
-        raise RuntimeError(f"Compression failed: {str(e)}")
+    # Add LZOP header and metadata
+    header = b'\x4c\x5a\x4f\x00'  # Magic bytes LZO\0
+    version = b'\x11\x00'         # Version 1.1
+    method = b'\x02\x00'          # LZO1X-999
+    flags = b'\x00\x00\x00\x00'   # No flags
+    extra_flags = b'\x00'
+    level = b'\x09'               # Compression level 9
+    mode = b'\x00\x00\x00\x00'    # Mode
+    mtime = b'\x00\x00\x00\x00'   # Modification time
+    original_length = struct.pack('>I', len(data))
+    compressed_length = struct.pack('>I', len(compressed_data))
+    
+    # Calculate checksums
+    adler32_original = struct.pack('>I', zlib.adler32(data) & 0xffffffff)
+    adler32_compressed = struct.pack('>I', zlib.adler32(compressed_data) & 0xffffffff)
+    
+    # Combine all parts
+    compressed_result = (
+        header + version + method + flags + extra_flags + level +
+        mode + mtime + original_length + compressed_length +
+        adler32_original + adler32_compressed + compressed_data
+    )
+    
+    return compressed_result
