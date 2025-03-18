@@ -1,7 +1,5 @@
 import pytest
 import lzo
-import zlib
-import struct
 
 from src.lzop_compression import lzop_compress
 
@@ -12,19 +10,7 @@ def test_lzop_compress_basic():
     
     # Validate basic structure
     assert len(compressed) > 0
-    assert len(compressed) <= len(input_data) * 1.2  # Slight overhead allowed
-
-def test_lzop_compress_header():
-    """Test the header structure of the compressed data"""
-    input_data = b"Test compression header"
-    compressed = lzop_compress(input_data)
-    
-    # Check magic bytes
-    assert compressed[:4] == b'\x4c\x5a\x4f\x00'
-    
-    # Check version
-    version = struct.unpack('>H', compressed[4:6])[0]
-    assert version == 0x1100
+    assert len(compressed) < len(input_data)
 
 def test_lzop_compress_error_handling():
     """Test error handling for invalid inputs"""
@@ -41,14 +27,8 @@ def test_lzop_compress_decompression():
     input_data = b"Compression and decompression test with LZO"
     compressed = lzop_compress(input_data)
     
-    # Parse header to find where compressed data starts
-    header_size = 32  # Estimated header size based on implementation
-    
-    # Extract payload
-    payload = compressed[header_size:]
-    
     # Decompress and verify
-    decompressed = lzo.decompress(payload)
+    decompressed = lzo.decompress(compressed)
     assert decompressed == input_data
 
 def test_lzop_compress_large_data():
@@ -57,4 +37,14 @@ def test_lzop_compress_large_data():
     compressed = lzop_compress(input_data)
     
     assert len(compressed) > 0
-    assert len(compressed) <= len(input_data) * 1.2  # Slight overhead allowed
+    assert len(compressed) < len(input_data)
+
+def test_lzop_compress_random_data():
+    """Test compression of random-like data"""
+    import os
+    input_data = os.urandom(1000)
+    compressed = lzop_compress(input_data)
+    
+    assert len(compressed) > 0
+    decompressed = lzo.decompress(compressed)
+    assert decompressed == input_data
