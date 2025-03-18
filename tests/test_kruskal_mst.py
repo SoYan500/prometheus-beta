@@ -31,12 +31,9 @@ def test_kruskal_mst_basic():
     # Check MST edges
     assert len(mst) == 3
     
-    # Check total weight
-    total_weight = sum(edge[2] for edge in mst)
-    assert total_weight == 15
-    
-    # Verify MST properties
-    assert set((edge[0], edge[1]) for edge in mst) == {(0, 3), (2, 3), (0, 2)}
+    # Verify edges that should be in the MST
+    expected_edges = {(2, 3, 4), (0, 3, 5), (0, 2, 6)}
+    assert set(mst) == expected_edges
 
 def test_kruskal_mst_empty_graph():
     """Test MST for an empty graph."""
@@ -65,21 +62,3 @@ def test_kruskal_mst_invalid_input():
     """Test invalid input handling."""
     with pytest.raises(ValueError):
         kruskal_mst(-1, [])
-
-def test_kruskal_mst_total_weight():
-    """Verify total weight of the MST."""
-    vertices = 4
-    edges = [
-        (0, 1, 10),
-        (0, 2, 6),
-        (0, 3, 5),
-        (1, 3, 15),
-        (2, 3, 4)
-    ]
-    
-    mst = kruskal_mst(vertices, edges)
-    
-    # Calculate total weight of MST
-    total_weight = sum(edge[2] for edge in mst)
-    
-    assert total_weight == 15  # 4 + 5 + 6
