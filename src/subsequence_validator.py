@@ -30,10 +30,29 @@ def can_divide_subsequences(s: str) -> bool:
     def is_consonant_subsequence(subseq: str) -> bool:
         return len(subseq) >= 2 and all(char not in vowels for char in subseq)
     
-    def divide_subsequences(index: int, used_indices: set, prev_type: str = None) -> bool:
+    def divide_subsequences(index: int, total_used: int, prev_type: str = None, used_indices: frozenset = None) -> bool:
+        """
+        Recursive function to divide the string into valid subsequences
+        
+        Args:
+            index: Current starting index
+            total_used: Number of indices already used
+            prev_type: Type of the previous subsequence
+            used_indices: Set of indices already used
+        
+        Returns:
+            bool: Whether a valid division exists
+        """
+        # Initialize used indices if not provided
+        used_indices = used_indices or frozenset()
+        
         # Base case: Successfully used entire string
-        if index == len(s):
+        if total_used == len(s):
             return True
+        
+        # Prevent going out of bounds
+        if index >= len(s):
+            return False
         
         # If current index already used, fail
         if index in used_indices:
@@ -57,13 +76,17 @@ def can_divide_subsequences(s: str) -> bool:
                 continue
             
             # Create new set of used indices
-            new_used_indices = used_indices.copy()
-            new_used_indices.update(range(index, index+length))
+            new_used_indices = frozenset(used_indices.union(range(index, index+length)))
             
             # Recursively try to divide the rest of the string
-            if divide_subsequences(index + length, new_used_indices, current_type):
+            if divide_subsequences(
+                index + length, 
+                total_used + length, 
+                current_type, 
+                new_used_indices
+            ):
                 return True
         
         return False
     
-    return divide_subsequences(0, set())
+    return divide_subsequences(0, 0)
