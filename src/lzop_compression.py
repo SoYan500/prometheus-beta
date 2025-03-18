@@ -24,8 +24,16 @@ def lzop_compress(data, compression_level=1):
         raise ValueError("Input data cannot be empty")
     
     try:
+        # Skip compression for very small files
+        if len(data) < 20:
+            return data
+        
         # Use LZO1X compression
         compressed_data = lzo.compress(data, compression_level)
+        
+        # If compression didn't reduce size meaningfully
+        if len(compressed_data) >= len(data):
+            return data
         
         # Prepend compressed data with original size to help decompression
         original_size = struct.pack('>I', len(data))
@@ -60,6 +68,10 @@ def lzop_decompress(compressed_data):
         raise ValueError("Input data cannot be empty")
     
     try:
+        # Check if data is already uncompressed
+        if len(compressed_data) <= 4:
+            return compressed_data
+        
         # Extract original size
         original_size = struct.unpack('>I', compressed_data[:4])[0]
         
