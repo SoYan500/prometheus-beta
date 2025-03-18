@@ -19,14 +19,8 @@ def to_alternating_uppercase(input_string):
     if not input_string:
         return ""
     
-    # Convert to alternating uppercase, tracking alphanumeric characters
-    result = []
-    uppercase_toggle = True
-    for char in input_string:
-        if char.isalpha():
-            result.append(char.upper() if uppercase_toggle else char.lower())
-            uppercase_toggle = not uppercase_toggle
-        else:
-            result.append(char)
-    
-    return ''.join(result)
+    # Convert to alternating uppercase
+    return ''.join(
+        char.upper() if (sum(1 for c in input_string[:index] if c.isalpha()) % 2 == 0) else char.lower()
+        for index, char in enumerate(input_string)
+    )
