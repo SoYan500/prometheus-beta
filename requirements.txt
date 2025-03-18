@@ -1,3 +1,2 @@
 pytest
 python-lzo
-zlib
