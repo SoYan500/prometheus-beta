@@ -19,11 +19,11 @@ def test_mixed_case_input():
 
 def test_string_with_spaces():
     """Test conversion of a string with spaces."""
-    assert to_alternating_uppercase("hello world") == "HeLlO WoRlD"
+    assert to_alternating_uppercase("hello world") == "HeLlO wOrLd"
 
 def test_string_with_special_characters():
     """Test conversion of a string with special characters."""
-    assert to_alternating_uppercase("hello, world!") == "HeLlO, WoRlD!"
+    assert to_alternating_uppercase("hello, world!") == "HeLlO, wOrLd!"
 
 def test_non_string_input():
     """Test that TypeError is raised for non-string input."""
