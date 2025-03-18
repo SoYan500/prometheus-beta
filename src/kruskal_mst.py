@@ -95,10 +95,12 @@ def kruskal_mst(vertices: int, edges: List[Tuple[int, int, int]]) -> List[Tuple[
         
         # Check if adding this edge creates a cycle
         if disjoint_set.union(u, v):
-            mst_edges.append(edge)
+            # Use canonicalized order for sorted unpacking
+            mst_edges.append(tuple(sorted((u, v)) + [weight]))
         
         # Stop when we have vertices-1 edges (complete MST)
         if len(mst_edges) == vertices - 1:
             break
     
-    return mst_edges
+    # Sort the final MST edges 
+    return sorted(mst_edges, key=lambda x: x[2])
