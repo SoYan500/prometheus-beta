@@ -14,9 +14,7 @@ def can_divide_subsequences(s: str) -> bool:
     Rules:
     1. Each subsequence must be at least 2 letters long
     2. Subsequences must alternate between vowel and consonant
-    3. No index can be used more than once
-    4. The entire string must be used
-    5. Each new subsequence must include consecutive characters
+    3. The entire string must be used
     """
     # Validate input
     if not s or not s.islower() or not s.isalpha():
@@ -25,77 +23,59 @@ def can_divide_subsequences(s: str) -> bool:
     # Define vowels and consonants
     vowels = set('aeiou')
     
-    def is_vowel_subsequence(subseq: str) -> bool:
-        return len(subseq) >= 2 and all(char in vowels for char in subseq)
+    def subsequence_type(subseq: str) -> str:
+        """Determine if a subsequence is vowel or consonant."""
+        if len(subseq) < 2:
+            return None
+        
+        # All vowels
+        if all(char in vowels for char in subseq):
+            return 'vowel'
+        
+        # All consonants
+        if all(char not in vowels for char in subseq):
+            return 'consonant'
+        
+        return None
     
-    def is_consonant_subsequence(subseq: str) -> bool:
-        return len(subseq) >= 2 and all(char not in vowels for char in subseq)
-    
-    def divide_subsequences(index: int, total_used: int, prev_type: str = None, used_indices: frozenset = None) -> bool:
+    def divide_subsequences(index: int, prev_type: str = None) -> bool:
         """
         Recursive function to divide the string into valid subsequences
         
         Args:
             index: Current starting index
-            total_used: Number of indices already used
             prev_type: Type of the previous subsequence
-            used_indices: Set of indices already used
         
         Returns:
             bool: Whether a valid division exists
         """
-        # Initialize used indices if not provided
-        used_indices = used_indices or frozenset()
-        
         # Base case: Successfully used entire string
-        if total_used == len(s):
+        if index == len(s):
             return True
         
         # Prevent going out of bounds
         if index >= len(s):
             return False
         
-        # If current index already used, fail
-        if index in used_indices:
-            return False
-        
         # Try subsequence lengths
         for length in range(2, len(s) - index + 1):
             subsequence = s[index:index+length]
             
-            # Determine subsequence type
-            current_type = 'vowel' if subsequence[0] in vowels else 'consonant'
+            # Get subsequence type
+            current_type = subsequence_type(subsequence)
+            
+            # Skip invalid subsequences
+            if current_type is None:
+                continue
             
             # Skip if this type is the same as the previous
             if current_type == prev_type:
                 continue
             
-            # Check subsequence validity based on type
-            if current_type == 'vowel' and not is_vowel_subsequence(subsequence):
-                continue
-            if current_type == 'consonant' and not is_consonant_subsequence(subsequence):
-                continue
-            
-            # Create new set of used indices
-            new_used_indices = frozenset(used_indices.union(range(index, index+length)))
-            
-            # Additional constraint: ensure strict consecutive usage
-            if index > 0 and not set(range(index-1, index+1)).isdisjoint(used_indices):
-                continue
-            
-            # Additional constraint: ensure no index is reused
-            if any(idx in used_indices for idx in range(index, index+length)):
-                continue
-            
             # Recursively try to divide the rest of the string
-            if divide_subsequences(
-                index + length, 
-                total_used + length, 
-                current_type, 
-                new_used_indices
-            ):
+            if divide_subsequences(index + length, current_type):
                 return True
         
         return False
     
-    return divide_subsequences(0, 0)
+    return divide_subsequences(0)
