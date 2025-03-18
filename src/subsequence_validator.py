@@ -32,10 +32,17 @@ def can_divide_subsequences(s: str) -> bool:
                all(char not in vowels for char in subseq)
     
     # Recursive function to explore all possible divisions
-    def divide_subsequences(index: int, last_subsequence_type: str = None) -> bool:
+    def divide_subsequences(index: int, last_subsequence_type: str = None, used_indices: set = None) -> bool:
+        # Initialize used_indices if not provided
+        used_indices = used_indices or set()
+        
         # Successfully reached the end of the string
         if index == len(s):
             return True
+        
+        # Prevent using already used indices
+        if index in used_indices:
+            return False
         
         # Try subsequences of different lengths
         for length in range(2, len(s) - index + 1):
@@ -53,8 +60,12 @@ def can_divide_subsequences(s: str) -> bool:
             if current_type == last_subsequence_type:
                 continue
             
+            # Create a new set of used indices
+            new_used_indices = used_indices.copy()
+            new_used_indices.update(range(index, index + length))
+            
             # Recursively try to divide the rest of the string
-            if divide_subsequences(index + length, current_type):
+            if divide_subsequences(index + length, current_type, new_used_indices):
                 return True
         
         # No valid division found
